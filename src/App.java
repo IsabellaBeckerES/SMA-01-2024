@@ -107,9 +107,9 @@ public class App {
         long tempo;
         // Chegada
         if ("C".equals(tipoEvento)){
-            tempo = (long) (tempoChegadas[0] + ((tempoChegadas[1]) * numPseudoaleatorio));
+            tempo = (long) (tempoChegadas[0] + ((tempoChegadas[1] - tempoChegadas[0]) * numPseudoaleatorio));
         } else { // Saida
-            tempo = (long) (tempoSaidas[0] + ((tempoSaidas[1]) * numPseudoaleatorio));
+            tempo = (long) (tempoSaidas[0] + ((tempoSaidas[1] - tempoSaidas[0]) * numPseudoaleatorio));
         }
         Evento ev = new Evento(tempo, tipoEvento);
 

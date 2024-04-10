@@ -6,19 +6,19 @@ public class Fila {
 
     int quantidadeDeServidores;
     int capacidade;
-    int clientesPerdidos;
+    int quantidadeDePerdas;
 
     int tempoMinimoDeChegada;   // -1 significa que a fila não recebe chegadas
     int tempoMaximoDeChegada;   // -1 significa que a fila não recebe chegadas
     int tempoMinimoDeAtendimento;
     int tempoMaximoDeAtendimento;
 
-    long[] acumulador;
+    double[] acumulador;
 
     public Fila(int servidores, int capacidade, int tempoMinimoDeChegada, int tempoMaximoDeChegada, int tempoMinimoDeAtendimento, int tempoMaximoDeAtendimento) {
         elementos = new ArrayList<>();
         
-        clientesPerdidos = 0;
+        quantidadeDePerdas = 0;
 
         this.quantidadeDeServidores = servidores;
         this.capacidade = capacidade;
@@ -28,7 +28,7 @@ public class Fila {
         this.tempoMinimoDeAtendimento = tempoMinimoDeAtendimento;
         this.tempoMaximoDeAtendimento = tempoMaximoDeAtendimento;
 
-        acumulador = new long[this.capacidade + 1];
+        acumulador = new double[this.capacidade + 1];
     }
 
     public int capacidade() {
@@ -44,8 +44,8 @@ public class Fila {
     }
 
     public int perda() {
-        clientesPerdidos++;
-        return clientesPerdidos;
+        quantidadeDePerdas++;
+        return quantidadeDePerdas;
     }
 
     public boolean entrada(String elemento) {
@@ -62,8 +62,12 @@ public class Fila {
         return elementos.remove(0);
     }
 
-    public void acumularTempo(long tempoAAcumular) {
+    public void acumularTempo(double tempoAAcumular) {
         this.acumulador[this.status()] += tempoAAcumular;
+    }
+
+    public int quantidadeDePerdas() {
+        return this.quantidadeDePerdas;
     }
 
 }

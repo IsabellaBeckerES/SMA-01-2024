@@ -30,8 +30,8 @@ public class Evento {
         return this.idFila;
     }
 
-    public int setIdFila() {
-        return this.idFila;
+    public void setIdFila(int idFila) {
+        this.idFila = idFila;
     }
 
     public int getIdFilaDestino() {
@@ -44,6 +44,6 @@ public class Evento {
 
     @Override
     public String toString() {
-        return "[" + tipo + "] - tempo: " + tempo + " fila: " + idFila + "\n"; 
+        return "[" + tipo + "] - tempo: " + tempo + " fila: " + idFila + " filaDestino: " + idFilaDestino  + "\n"; 
     }
 }

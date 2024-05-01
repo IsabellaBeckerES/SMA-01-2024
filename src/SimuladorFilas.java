@@ -26,19 +26,22 @@ public class SimuladorFilas {
         iniciaFilas();
 
         Evento primeiro = new Evento(tempoPrimeiroEvento, TipoEvento.CHEGADA, 0);
-        escalonador.add(primeiro);        
+        escalonador.add(primeiro);
         
-        System.out.println(escalonador.toString());
+        int countSimulacao = 0;
         while (listNumPseudoaleatorios.size() > 0) {
+            System.out.println("Contador: " + countSimulacao);
+            System.out.println( escalonador.toString());
+            countSimulacao++;
+
             Evento ev = getNextEvento();
             if (ev.getTipo() == TipoEvento.CHEGADA) {
                 chegada(ev);
             } else if (ev.getTipo() == TipoEvento.SAIDA) {
                 saida(ev);
             } else if (ev.getTipo() == TipoEvento.PASSAGEM) {
-                passagem();
+                passagem(ev);
             }
-            System.out.println(escalonador.toString());
         }
     }
 
@@ -107,22 +110,32 @@ public class SimuladorFilas {
         var filaEv = filas.get(ev.getIdFila());
         filaEv.getElementos().remove(0);
         escalonador.remove(ev);
-        if (filaEv.getStatus() >= filaEv.getServidores()) {
-            escalonador.add(calcularTempoAgendado(ev, TipoEvento.SAIDA));
+        if (filaEv.getStatus() <= filaEv.getServidores()) {
+
+            var idDestino = getDestino(filaEv.getIdFila());
+            if (idDestino >= 0) {
+                // seta fila de destino para quando realizar a passagem
+                ev.setIdFilaDestino(idDestino);
+                // agenda passagem
+                escalonador.add(calcularTempoAgendado(ev, TipoEvento.PASSAGEM));
+            } else {
+                escalonador.add(calcularTempoAgendado(ev, TipoEvento.SAIDA));
+            }
         }
     }
 
     private void passagem(Evento ev) {
+        acumulaTempo(ev);
         var filaEvDestino = filas.get(ev.getIdFilaDestino());
         var filaEvOrigem = filas.get(ev.getIdFila());
 
-        if (filaEvDestino.getStatus() < filaEvDestino.getCapacidade()) {
+        if (filaEvDestino.getStatus() < filaEvDestino.getCapacidade() || filaEvDestino.getCapacidade() == -1 ) {
             filaEvOrigem.getElementos().remove(0);
             filaEvDestino.getElementos().add("x");
             // remove do escalonador pois ação foi executada
             escalonador.remove(ev);
 
-            if (filaEvDestino.getStatus() <= filaEvDestino.getCapacidade()) {
+            if (filaEvDestino.getStatus() <= filaEvDestino.getServidores()) {
                 // verifica se deve agendar uma passagem ou saida
                 var idDestino = getDestino(filaEvDestino.getIdFila());
                 if (idDestino >= 0) {
@@ -131,6 +144,7 @@ public class SimuladorFilas {
                     // agenda passagem
                     escalonador.add(calcularTempoAgendado(ev, TipoEvento.PASSAGEM));
                 } else {
+                    ev.setIdFila(filaEvDestino.getIdFila());
                     escalonador.add(calcularTempoAgendado(ev, TipoEvento.SAIDA));
                 }
             }
@@ -170,6 +184,9 @@ public class SimuladorFilas {
         Evento evento = new Evento(tempo, tipoEvento, ev.getIdFila());
         if (TipoEvento.PASSAGEM.equals(tipoEvento)) {
             evento.setIdFilaDestino(ev.getIdFilaDestino());
+        } else if (TipoEvento.SAIDA.equals(tipoEvento)) {
+            // saida não tem fila de destino
+            evento.setIdFilaDestino(-1);
         }
 
         return evento;

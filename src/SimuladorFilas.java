@@ -54,6 +54,10 @@ public class SimuladorFilas {
         conexoes.add(conexao22);
         ConexaoEntreFilas conexao33 = new ConexaoEntreFilas(fila2.getIdFila(), fila1.getIdFila(), 0.7);
         conexoes.add(conexao33);
+
+        // conexaoes de saida
+        // -1 indica saida
+        ConexaoEntreFilas conexaoSaida2 = new ConexaoEntreFilas(fila2.getIdFila(), -1, 0.7);
     }
 
     public void chegada(Evento ev) {

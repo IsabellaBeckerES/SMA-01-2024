@@ -30,6 +30,7 @@ public class Fila {
         acumulador = new double[this.capacidade + 1];
     }
 
+    // fila com capacidade infinita
     public Fila(int servidores, int idFila, double tempoChegadaMin, double tempoChegadaMax,
         double tempoAtendimentoMin, double tempoAtendimentoMax) {
         elementos = new ArrayList<>();
@@ -44,6 +45,7 @@ public class Fila {
         acumulador = new double[100];
     }
 
+    // fila que recebe passagem de outras filas, ou seja não são a primeira a receber
     public Fila(int servidores, int capacidade, int idFila, double tempoAtendimentoMin, double tempoAtendimentoMax) {
     elementos = new ArrayList<>();
     this.idFila = idFila;

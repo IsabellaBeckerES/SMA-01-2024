@@ -1,6 +1,10 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.Queue;
+
 
 public class SimuladorFilas {
     private double tempoGlobal;
@@ -8,25 +12,30 @@ public class SimuladorFilas {
     private ArrayList<Evento> escalonador = new ArrayList<Evento>();
     private ArrayList<Fila> filas = new ArrayList<>();
     private ArrayList<ConexaoEntreFilas> conexoes = new ArrayList<>();
+    private Queue<Double> listNumPseudoaleatorios = new LinkedList<>();
 
     private double tempoPrimeiroEvento = 2;
     private int count = 100; // quantidade de num pseudoaleatorios
 
     public void iniciaSimulacao() {
+        while (count > listNumPseudoaleatorios.size()) {
+            listNumPseudoaleatorios.add(geradorNumPseudoaleatorio.gerarNumPseudoaleatorio());
+            count--;
+        }
+        
         iniciaFilas();
 
         Evento primeiro = new Evento(tempoPrimeiroEvento, TipoEvento.CHEGADA, 0);
         escalonador.add(primeiro);        
         
         System.out.println(escalonador.toString());
-        while (count > 0) {
+        while (listNumPseudoaleatorios.size() > 0) {
             Evento ev = getNextEvento();
             if (ev.getTipo() == TipoEvento.CHEGADA) {
                 chegada(ev);
             } else if (ev.getTipo() == TipoEvento.SAIDA) {
                 saida(ev);
             }
-            count--;
             System.out.println(escalonador.toString());
         }
     }
@@ -47,17 +56,20 @@ public class SimuladorFilas {
         ConexaoEntreFilas conexao12 = new ConexaoEntreFilas(fila1.getIdFila(), fila2.getIdFila(), 0.8);
         conexoes.add(conexao12);
         ConexaoEntreFilas conexao13 = new ConexaoEntreFilas(fila1.getIdFila(), fila3.getIdFila(), 0.2);
-        conexoes.add(conexao13);
+        conexoes.add(conexao13);        
         ConexaoEntreFilas conexao21 = new ConexaoEntreFilas(fila2.getIdFila(), fila1.getIdFila(), 0.3);
         conexoes.add(conexao21);
-        ConexaoEntreFilas conexao22 = new ConexaoEntreFilas(fila2.getIdFila(), fila2.getIdFila(), 0.5);
-        conexoes.add(conexao22);
-        ConexaoEntreFilas conexao33 = new ConexaoEntreFilas(fila2.getIdFila(), fila1.getIdFila(), 0.7);
-        conexoes.add(conexao33);
+        ConexaoEntreFilas conexao23 = new ConexaoEntreFilas(fila2.getIdFila(), fila3.getIdFila(), 0.5);
+        conexoes.add(conexao23);
+        ConexaoEntreFilas conexao32 = new ConexaoEntreFilas(fila3.getIdFila(), fila2.getIdFila(), 0.7);
+        conexoes.add(conexao32);
 
         // conexaoes de saida
         // -1 indica saida
-        ConexaoEntreFilas conexaoSaida2 = new ConexaoEntreFilas(fila2.getIdFila(), -1, 0.7);
+        ConexaoEntreFilas conexaoSaida2 = new ConexaoEntreFilas(fila2.getIdFila(), -1, 0.2);
+        conexoes.add(conexaoSaida2);
+        ConexaoEntreFilas conexaoSaida3 = new ConexaoEntreFilas(fila3.getIdFila(), -1, 0.3);
+        conexoes.add(conexaoSaida3);
     }
 
     public void chegada(Evento ev) {
@@ -75,13 +87,14 @@ public class SimuladorFilas {
                 var idDestino = getDestino(filaEv.getIdFila());
                 if (idDestino >= 0) {
                     // agenda passagem
+                    escalonador.add(calcularTempoAgendado(ev, TipoEvento.PASSAGEM));
                 } else {
                     escalonador.add(calcularTempoAgendado(ev, TipoEvento.SAIDA));
                 }
             }
             escalonador.add(calcularTempoAgendado(ev, TipoEvento.CHEGADA));
         } else {
-            // loss            
+            // loss
         }
     }
 
@@ -95,8 +108,7 @@ public class SimuladorFilas {
         }
     }
 
-    public void acumulaTempo (Evento ev) {
-        
+    public void acumulaTempo (Evento ev) {        
         double delta = ev.getTempo() - tempoGlobal;
         for (Fila fila : filas) {
             int status = fila.getStatus();
@@ -107,7 +119,7 @@ public class SimuladorFilas {
 
     public Evento calcularTempoAgendado(Evento ev, TipoEvento tipoEvento) {
         var filaEv = filas.get(ev.getIdFila());
-        var numPseudoaleatorio = geradorNumPseudoaleatorio.gerarNumPseudoaleatorio();
+        var numPseudoaleatorio = listNumPseudoaleatorios.poll();
         double tempo = 0.0;
         // Chegada
         if (tipoEvento == TipoEvento.CHEGADA) {
@@ -115,6 +127,10 @@ public class SimuladorFilas {
             tempo = (double) (filaEv.getTempoChegadaMin() + ((filaEv.getTempoChegadaMax() - filaEv.getTempoChegadaMin()) * numPseudoaleatorio));
             //System.out.println(tempo);
         } else if (tipoEvento == TipoEvento.SAIDA) { // Saida
+            //System.out.println(filaEv.getTempoAtendimentoMin() + " * " +  filaEv.getTempoAtendimentoMax() + " * " + filaEv.getTempoAtendimentoMin() + " * " + numPseudoaleatorio);
+            tempo = (double) (filaEv.getTempoAtendimentoMin()+ ((filaEv.getTempoAtendimentoMax() - filaEv.getTempoAtendimentoMin()) * numPseudoaleatorio));
+            //System.out.println(tempo);
+        } else if (tipoEvento == TipoEvento.PASSAGEM) { // Saida
             //System.out.println(filaEv.getTempoAtendimentoMin() + " * " +  filaEv.getTempoAtendimentoMax() + " * " + filaEv.getTempoAtendimentoMin() + " * " + numPseudoaleatorio);
             tempo = (double) (filaEv.getTempoAtendimentoMin()+ ((filaEv.getTempoAtendimentoMax() - filaEv.getTempoAtendimentoMin()) * numPseudoaleatorio));
             //System.out.println(tempo);
@@ -139,7 +155,7 @@ public class SimuladorFilas {
     private int getDestino(int id) {
         ArrayList<ConexaoEntreFilas> listAux = new ArrayList<>();        
         int filaDestinoSorteada = - 1;
-        double rand = Math.random();
+        double rand = listNumPseudoaleatorios.poll();
         double sum = 0.0;
 
         // filtra pela fila de origem

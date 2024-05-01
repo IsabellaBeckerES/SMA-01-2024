@@ -17,6 +17,8 @@ public class Fila {
 
     private double[] acumulador;
 
+    private int perdas;
+
     public Fila(int servidores, int capacidade, int idFila, double tempoChegadaMin, double tempoChegadaMax,
         double tempoAtendimentoMin, double tempoAtendimentoMax) {
         elementos = new ArrayList<>();
@@ -28,6 +30,7 @@ public class Fila {
         this.tempoAtendimentoMin = tempoAtendimentoMin;
         this.tempoAtendimentoMax = tempoAtendimentoMax;
         acumulador = new double[this.capacidade + 1];
+        perdas = 0;
     }
 
     // fila com capacidade infinita
@@ -43,18 +46,20 @@ public class Fila {
         capacidade = -1;
         // TODO - implementar um método para aumentar capacidade desse array caso a fila tenha capacidade infinita.
         acumulador = new double[100];
+        perdas = 0;
     }
 
     // fila que recebe passagem de outras filas, ou seja não são a primeira a receber
     public Fila(int servidores, int capacidade, int idFila, double tempoAtendimentoMin, double tempoAtendimentoMax) {
-    elementos = new ArrayList<>();
-    this.idFila = idFila;
-    this.servidores = servidores;
-    this.capacidade = capacidade;
-    this.tempoAtendimentoMin = tempoAtendimentoMin;
-    this.tempoAtendimentoMax = tempoAtendimentoMax;
-    acumulador = new double[this.capacidade + 1];
-}
+        elementos = new ArrayList<>();
+        this.idFila = idFila;
+        this.servidores = servidores;
+        this.capacidade = capacidade;
+        this.tempoAtendimentoMin = tempoAtendimentoMin;
+        this.tempoAtendimentoMax = tempoAtendimentoMax;
+        acumulador = new double[this.capacidade + 1];
+        perdas = 0;
+    }
 
     // Atributos que irão variar ao decorrer da simulação
     public ArrayList<String> getElementos() {
@@ -112,5 +117,13 @@ public class Fila {
 
     public void setProbabilidadeSaida(double probabilidadeSaida) {
         this.probabilidadeSaida = probabilidadeSaida;
+    }
+
+    public void addPerda() {
+        perdas++;
+    }
+
+    public int getPerdas() {
+        return perdas;
     }
 }

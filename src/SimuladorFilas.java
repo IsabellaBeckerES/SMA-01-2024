@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class SimuladorFilas {
     private double tempoGlobal;
@@ -13,7 +15,7 @@ public class SimuladorFilas {
     public void iniciaSimulacao() {
         iniciaFilas();
 
-        Evento primeiro = new Evento(tempoPrimeiroEvento, TipoEvento.CHEGADA, filas.size()-1);
+        Evento primeiro = new Evento(tempoPrimeiroEvento, TipoEvento.CHEGADA, 0);
         escalonador.add(primeiro);        
         
         System.out.println(escalonador.toString());
@@ -57,17 +59,21 @@ public class SimuladorFilas {
     public void chegada(Evento ev) {
         acumulaTempo(ev);
         var filaEv = filas.get(ev.getIdFila());
-        if (filaEv.getStatus() < filaEv.getCapacidade()) {
+        // -1 significa que a fila tem capacidade infinita
+        if (filaEv.getStatus() < filaEv.getCapacidade() || filaEv.getCapacidade() == -1 ) {
             // adiciona na fila
             filaEv.getElementos().add("x");
             // remove do escalonador pois ação foi executada
             escalonador.remove(ev);
 
             if (filaEv.getStatus() <= filaEv.getServidores()) {
-                // agenda saida
-                // getConexao();
-                // if ()
-                escalonador.add(calcularTempoAgendado(ev, TipoEvento.SAIDA));
+                // agenda saida ou passagem
+                var idDestino = getDestino(filaEv.getIdFila());
+                if (idDestino >= 0) {
+                    // agenda passagem
+                } else {
+                    escalonador.add(calcularTempoAgendado(ev, TipoEvento.SAIDA));
+                }
             }
             escalonador.add(calcularTempoAgendado(ev, TipoEvento.CHEGADA));
         } else {
@@ -125,9 +131,30 @@ public class SimuladorFilas {
         return proximoEvento;
     }
 
-    private ConexaoEntreFilas getConexao (int id) {
-        ArrayList<ConexaoEntreFilas> listAux = new ArrayList<>();
-        // busca a conexao com base na probabilidade
-        return null;
+    // retorna id da fila destino
+    private int getDestino(int id) {
+        ArrayList<ConexaoEntreFilas> listAux = new ArrayList<>();        
+        int filaDestinoSorteada = - 1;
+        double rand = Math.random();
+        double sum = 0.0;
+
+        // filtra pela fila de origem
+        for (var conexao : conexoes) {
+            if (conexao.getIdOrigem() == id) {
+                listAux.add(conexao);
+            }
+        }
+        // ordena pela menor probabilidade
+        Collections.sort(listAux, Comparator.comparing(ConexaoEntreFilas::getProbabilidade));
+
+        for (var itemList : listAux) {
+            sum += itemList.getProbabilidade();
+            if (rand < sum) {
+                filaDestinoSorteada = itemList.getIdDestino();
+                return filaDestinoSorteada;
+            }
+        }
+
+        return -1;
     }
 }

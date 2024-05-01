@@ -39,7 +39,9 @@ public class Fila {
         this.tempoChegadaMax= tempoChegadaMax;
         this.tempoAtendimentoMin = tempoAtendimentoMin;
         this.tempoAtendimentoMax = tempoAtendimentoMax;
-        acumulador = new double[this.capacidade + 1];
+        capacidade = -1;
+        // TODO - implementar um método para aumentar capacidade desse array caso a fila tenha capacidade infinita.
+        acumulador = new double[100];
     }
 
     public Fila(int servidores, int capacidade, int idFila, double tempoAtendimentoMin, double tempoAtendimentoMax) {

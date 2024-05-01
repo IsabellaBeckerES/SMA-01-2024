@@ -1,7 +1,8 @@
 public class Evento {
     private double tempo;
     private TipoEvento tipo;
-    private int idFila;
+    private int idFila; // origem
+    private int idFilaDestino;
 
     public Evento (double tempo, TipoEvento tipo, int idFila) {
         this.tempo = tempo;
@@ -31,6 +32,14 @@ public class Evento {
 
     public int setIdFila() {
         return this.idFila;
+    }
+
+    public int getIdFilaDestino() {
+        return idFilaDestino;
+    }
+
+    public void setIdFilaDestino(int idFilaDestino) {
+        this.idFilaDestino = idFilaDestino;
     }
 
     @Override

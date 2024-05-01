@@ -1,4 +1,3 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -141,6 +140,7 @@ public class SimuladorFilas {
                 if (idDestino >= 0) {
                     // seta fila de destino para quando realizar a passagem
                     ev.setIdFilaDestino(idDestino);
+                    ev.setIdFila(filaEvDestino.getIdFila());
                     // agenda passagem
                     escalonador.add(calcularTempoAgendado(ev, TipoEvento.PASSAGEM));
                 } else {

@@ -2,72 +2,79 @@ import java.util.ArrayList;
 
 public class Fila {
 
-    ArrayList<String> elementos;
+    private ArrayList<String> elementos;
 
-    int quantidadeDeServidores;
-    int capacidade;
-    int quantidadeDePerdas;
+    private int servidores;
+    private int capacidade;
+    private int idFila;
 
-    int tempoMinimoDeChegada;   // -1 significa que a fila não recebe chegadas
-    int tempoMaximoDeChegada;   // -1 significa que a fila não recebe chegadas
-    int tempoMinimoDeAtendimento;
-    int tempoMaximoDeAtendimento;
+    private double tempoChegadaMin;
+    private double tempoChegadaMax;
+    private double tempoAtendimentoMin;
+    private double tempoAtendimentoMax;
 
-    double[] acumulador;
+    private double[] acumulador;
 
-    public Fila(int servidores, int capacidade, int tempoMinimoDeChegada, int tempoMaximoDeChegada, int tempoMinimoDeAtendimento, int tempoMaximoDeAtendimento) {
+    public Fila(int servidores, int capacidade, int idFila, double tempoChegadaMin, double tempoChegadaMax,
+        double tempoAtendimentoMin, double tempoAtendimentoMax) {
         elementos = new ArrayList<>();
-        
-        quantidadeDePerdas = 0;
-
-        this.quantidadeDeServidores = servidores;
+        this.idFila = idFila;
+        this.servidores = servidores;
         this.capacidade = capacidade;
-
-        this.tempoMinimoDeChegada = tempoMinimoDeChegada;
-        this.tempoMaximoDeChegada = tempoMaximoDeChegada;
-        this.tempoMinimoDeAtendimento = tempoMinimoDeAtendimento;
-        this.tempoMaximoDeAtendimento = tempoMaximoDeAtendimento;
-
+        this.tempoChegadaMin= tempoChegadaMin;
+        this.tempoChegadaMax= tempoChegadaMax;
+        this.tempoAtendimentoMin = tempoAtendimentoMin;
+        this.tempoAtendimentoMax = tempoAtendimentoMax;
         acumulador = new double[this.capacidade + 1];
     }
 
-    public int capacidade() {
-        return this.capacidade;
+    // Atributos que irão variar ao decorrer da simulação
+    public ArrayList<String> getElementos() {
+        return elementos;
     }
 
-    public int quantidadeDeServidores() {
-        return this.quantidadeDeServidores;
+    public double[] getAcumulador() {
+        return acumulador;
     }
 
-    public int status() {
-        return this.elementos.size();
+    // Atributos que não irão variar após a inicialização
+    public int getServidores() {
+        return servidores;
     }
 
-    public int perda() {
-        quantidadeDePerdas++;
-        return quantidadeDePerdas;
+    public void setServidores(int servidores) {
+        this.servidores = servidores;
     }
 
-    public boolean entrada(String elemento) {
-        if (status() < capacidade) {
-            elementos.add(elemento);
-            return true;
-        } else {
-            perda();
-            return false;
-        }
+    public int getCapacidade() {
+        return capacidade;
     }
 
-    public String saida() {
-        return elementos.remove(0);
+    public void setCapacidade(int capacidade) {
+        this.capacidade = capacidade;
     }
 
-    public void acumularTempo(double tempoAAcumular) {
-        this.acumulador[this.status()] += tempoAAcumular;
+    public int getStatus() {
+        return elementos.size();
+    }
+    
+    public int getIdFila() {
+        return idFila;
     }
 
-    public int quantidadeDePerdas() {
-        return this.quantidadeDePerdas;
+    public double getTempoAtendimentoMin() {
+        return tempoAtendimentoMin;
     }
 
+    public double getTempoAtendimentoMax() {
+        return tempoAtendimentoMax;
+    }
+
+    public double getTempoChegadaMin() {
+        return tempoChegadaMin;
+    }
+
+    public double getTempoChegadaMax() {
+        return tempoChegadaMax;
+    }
 }

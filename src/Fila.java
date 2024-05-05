@@ -139,38 +139,53 @@ public class Fila {
         return getAcumulador()[estado] / tempoGlobal;
     }
 
-    public double taxaDeAtendimentoDoEstado(int estado) {
-        return Math.min(estado, capacidade) * taxaDeAtendimentoDaFila();
+    public double taxaDeAtendimentoDoEstadoPorHora(int estado) {
+        return Math.min(estado, capacidade) * taxaMediaDeAtendimentoDaFilaPorHora();
     }
 
-    public double taxaDeAtendimentoDaFila() {
-        return 0; // ???
+    public double taxaMediaDeAtendimentoDaFila() {
+        return capacidade / (tempoAtendimentoMax - tempoAtendimentoMin);
+    }
+
+    public double taxaMediaDeAtendimentoDaFilaPorHora() {
+        return taxaMediaDeAtendimentoDaFila() * 60;
+    }
+
+    public double populacaoDoEstado(int estado, double tempoGlobal) {
+        return probabilidadeDoEstado(estado, tempoGlobal) * estado;
     }
 
     public double populacao(double tempoGlobal) {
         double populacao = 0;
-        HashMap<Integer, Double> probabilidades = probabilidadesDeCadaEstado(tempoGlobal);
         for (int estado = 0; estado < getAcumulador().length; estado++)
-            populacao += probabilidades.get(estado) * estado;
+            populacao += populacaoDoEstado(estado, tempoGlobal);
         return populacao;
     }
 
-    public double vazao(double tempoGlobal) {
+    public double vazaoDoEstadoPorHora(int estado, double tempoGlobal) {
+        return probabilidadeDoEstado(estado, tempoGlobal) * taxaDeAtendimentoDoEstadoPorHora(estado);
+    }
+
+    public double vazaoPorHora(double tempoGlobal) {
         double vazao = 0;
         for (int estado = 0; estado < getAcumulador().length; estado++)
-            vazao += probabilidadeDoEstado(estado, tempoGlobal) * taxaDeAtendimentoDoEstado(estado);
+            vazao += vazaoDoEstadoPorHora(estado, tempoGlobal);
         return vazao;
     }
 
-    public double utilizacao() {
+    public double utilizacaoDoEstado(int estado, double tempoGlobal) {
+        return probabilidadeDoEstado(estado, tempoGlobal) * (Math.min(estado, capacidade) / (double) capacidade);
+    }
+
+    public double utilizacao(double tempoGlobal) {
         double utilizacao = 0;
         for (int estado = 0; estado < getAcumulador().length; estado++)
-            utilizacao += probabilidadeDoEstado(estado, utilizacao) * (Math.min(estado, capacidade) / capacidade);
+            utilizacao += utilizacaoDoEstado(estado, tempoGlobal);
         return utilizacao;
     }
 
-    public double tempoDeResposta(double tempoGlobal) {
-        return populacao(tempoGlobal) / vazao(tempoGlobal);
+    public double tempoDeRespostaEmHoras(double tempoGlobal) {
+        return populacao(tempoGlobal) / vazaoPorHora(tempoGlobal);
     }
 
 }

@@ -75,7 +75,7 @@ public class SimuladorFilas {
 
         System.out.println("******************************************");
 
-
+        imprimirEstatisticasDeCadaFila();
     }
 
     private void iniciaFilas() {
@@ -279,13 +279,19 @@ public class SimuladorFilas {
     public void imprimirEstatisticasDeCadaFila() {
         for (Fila fila: filas) {
             System.out.println("FILA " + fila.getIdFila());
-            System.out.println("\t" + "Probabilidades");
-            for (int estado = 0; estado < fila.getAcumulador().length; estado++)
-                System.out.println("\t-" + "Estado " + estado + ": " + fila.probabilidadeDoEstado(estado, tempoGlobal));
-            System.out.println("\t" + "População: " + fila.populacao(tempoGlobal));
-            System.out.println("\t" + "Vazão: " + fila.vazao(tempoGlobal));
-            System.out.println("\t" + "Utilização: " + fila.utilizacao());
-            System.out.println("\t" + "Tempo de resposta: " + fila.tempoDeResposta(tempoGlobal));
+            System.out.println("\t" + "Dados por estado");
+            for (int estado = 0; estado < fila.getAcumulador().length; estado++) {
+                System.out.println("\t- " + "Estado " + estado);
+                System.out.println("\t- - " + "Probabilidade: " + (fila.probabilidadeDoEstado(estado, tempoGlobal) * 100) + "%");
+                System.out.println("\t- - " + "População: " + fila.populacaoDoEstado(estado, tempoGlobal) + " clientes");
+                System.out.println("\t- - " + "Vazão: " + fila.vazaoDoEstadoPorHora(estado, tempoGlobal) + " clientes por hora");
+                System.out.println("\t- - " + "Utilização: " + (fila.utilizacaoDoEstado(estado, tempoGlobal) * 100) + "%");
+            }
+            System.out.println("\t" + "Totais");
+            System.out.println("\t- " + "População: " + fila.populacao(tempoGlobal) + " clientes");
+            System.out.println("\t- " + "Vazão: " + fila.vazaoPorHora(tempoGlobal) + " clientes por hora");
+            System.out.println("\t- " + "Utilização: " + (fila.utilizacao(tempoGlobal) * 100) + "%");
+            System.out.println("\t- " + "Tempo de resposta: " + fila.tempoDeRespostaEmHoras(tempoGlobal) + " hora(s)");
         }
     }
 

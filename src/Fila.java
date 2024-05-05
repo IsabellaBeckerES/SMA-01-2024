@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Fila {
 
@@ -126,4 +127,50 @@ public class Fila {
     public int getPerdas() {
         return perdas;
     }
+
+    public HashMap<Integer, Double> probabilidadesDeCadaEstado(double tempoGlobal) {
+        HashMap<Integer, Double> probabilidades = new HashMap<>();
+        for (int estado = 0; estado < getAcumulador().length; estado++)
+            probabilidades.put(estado, probabilidadeDoEstado(estado, tempoGlobal));
+        return probabilidades;
+    }
+
+    public double probabilidadeDoEstado(int estado, double tempoGlobal) {
+        return getAcumulador()[estado] / tempoGlobal;
+    }
+
+    public double taxaDeAtendimentoDoEstado(int estado) {
+        return Math.min(estado, capacidade) * taxaDeAtendimentoDaFila();
+    }
+
+    public double taxaDeAtendimentoDaFila() {
+        return 0; // ???
+    }
+
+    public double populacao(double tempoGlobal) {
+        double populacao = 0;
+        HashMap<Integer, Double> probabilidades = probabilidadesDeCadaEstado(tempoGlobal);
+        for (int estado = 0; estado < getAcumulador().length; estado++)
+            populacao += probabilidades.get(estado) * estado;
+        return populacao;
+    }
+
+    public double vazao(double tempoGlobal) {
+        double vazao = 0;
+        for (int estado = 0; estado < getAcumulador().length; estado++)
+            vazao += probabilidadeDoEstado(estado, tempoGlobal) * taxaDeAtendimentoDoEstado(estado);
+        return vazao;
+    }
+
+    public double utilizacao() {
+        double utilizacao = 0;
+        for (int estado = 0; estado < getAcumulador().length; estado++)
+            utilizacao += probabilidadeDoEstado(estado, utilizacao) * (Math.min(estado, capacidade) / capacidade);
+        return utilizacao;
+    }
+
+    public double tempoDeResposta(double tempoGlobal) {
+        return populacao(tempoGlobal) / vazao(tempoGlobal);
+    }
+
 }

@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -274,4 +275,18 @@ public class SimuladorFilas {
 
         return -1;
     }
+
+    public void imprimirEstatisticasDeCadaFila() {
+        for (Fila fila: filas) {
+            System.out.println("FILA " + fila.getIdFila());
+            System.out.println("\t" + "Probabilidades");
+            for (int estado = 0; estado < fila.getAcumulador().length; estado++)
+                System.out.println("\t-" + "Estado " + estado + ": " + fila.probabilidadeDoEstado(estado, tempoGlobal));
+            System.out.println("\t" + "População: " + fila.populacao(tempoGlobal));
+            System.out.println("\t" + "Vazão: " + fila.vazao(tempoGlobal));
+            System.out.println("\t" + "Utilização: " + fila.utilizacao());
+            System.out.println("\t" + "Tempo de resposta: " + fila.tempoDeResposta(tempoGlobal));
+        }
+    }
+
 }

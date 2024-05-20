@@ -128,6 +128,24 @@ public class Fila {
         return perdas;
     }
 
+    public boolean cabeMaisUmElemento() {
+        return getStatus() < getCapacidade() || getCapacidade() == -1;
+    }
+
+    public boolean temServidoresOciosos() {
+        System.out.println(idFila + ": " + getStatus() + " elementos, " + getServidores() + " servidores");
+        return getStatus() < getServidores(); // trocar por <= funciona mas a lógica fica errada
+    }
+
+    public int push(String elemento) {
+        elementos.add(elemento);
+        return elementos.size();
+    }
+
+    public String pop() {
+        return elementos.remove(0);
+    }
+
     public HashMap<Integer, Double> probabilidadesDeCadaEstado(double tempoGlobal) {
         HashMap<Integer, Double> probabilidades = new HashMap<>();
         for (int estado = 0; estado < getAcumulador().length; estado++)

@@ -1,13 +1,13 @@
 public class Evento {
     private double tempo;
     private TipoEvento tipo;
-    private int idFila; // origem
+    private int idFilaOrigem; // origem
     private int idFilaDestino;
 
-    public Evento (double tempo, TipoEvento tipo, int idFila) {
+    public Evento (double tempo, TipoEvento tipo, int idFilaOrigem) {
         this.tempo = tempo;
         this.tipo = tipo;
-        this.idFila = idFila;
+        this.idFilaOrigem = idFilaOrigem;
     }
 
     public double getTempo() {
@@ -26,12 +26,12 @@ public class Evento {
         this.tipo = tipo;
     }
 
-    public int getIdFila() {
-        return this.idFila;
+    public int getIdFilaOrigem() {
+        return this.idFilaOrigem;
     }
 
-    public void setIdFila(int idFila) {
-        this.idFila = idFila;
+    public void setIdFilaOrigem(int idFilaOrigem) {
+        this.idFilaOrigem = idFilaOrigem;
     }
 
     public int getIdFilaDestino() {
@@ -44,6 +44,6 @@ public class Evento {
 
     @Override
     public String toString() {
-        return "[" + tipo + "] - tempo: " + tempo + " fila: " + idFila + " filaDestino: " + idFilaDestino  + "\n"; 
+        return "[" + tipo + "] - tempo: " + tempo + " fila: " + idFilaOrigem + " filaDestino: " + idFilaDestino  + "\n"; 
     }
 }

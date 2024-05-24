@@ -2,3 +2,20 @@ qtdNumPseudoAleatorios: 100
 semente: 1
 
 chegada: 5.0
+
+filas:
+  - idFila: 0
+    servidores: 2
+    capacidade: 10
+    tempoChegadaMin: 2.0
+    tempoChegadaMax: 5.0
+    tempoAtendimentoMin: 3.0
+    tempoAtendimentoMax: 6.0
+
+conexoes:
+  - idOrigem: 0
+    idDestino: 1
+    probabilidade: 3.0
+  - idOrigem: 1
+    idDestino: 0
+    probabilidade: 4.0

@@ -9,6 +9,9 @@ public class ConexaoEntreFilas {
         this.probabilidade = probabilidade;
     }
 
+    public ConexaoEntreFilas() {
+    }
+
     public int getIdDestino() {
         return idDestino;
     }

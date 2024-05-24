@@ -22,7 +22,7 @@ public class App {
     public static void lerArquivoYaml() throws IOException {
         var mapper = new ObjectMapper(new YAMLFactory());
         ConfigSimulador configSimulador = mapper.readValue(new File("configSimulador.yaml"), ConfigSimulador.class);
-        //TODO add atributos de listas ao ConfigSimulador (Filas e Conexoes)
+
         //TODO setar campos em suas respectivas classes que serão usadas na simulação
     }
 }

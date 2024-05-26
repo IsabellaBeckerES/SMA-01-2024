@@ -7,9 +7,10 @@ import java.io.*;
 public class App {
 
     public static void main(String[] args) throws Exception {
-        lerArquivoYaml();
-        SimuladorFilas simlador = new SimuladorFilas();
-        simlador.iniciaSimulacao();
+
+        SimuladorFilas simulador = new SimuladorFilas();
+        ConfigSimulador configSimulador = lerArquivoYaml();
+        simulador.iniciaSimulacao(configSimulador);
     }
 
     public static void escrever(String dados) throws Exception {
@@ -19,10 +20,8 @@ public class App {
         bw.close();
     }
 
-    public static void lerArquivoYaml() throws IOException {
+    public static ConfigSimulador lerArquivoYaml() throws IOException {
         var mapper = new ObjectMapper(new YAMLFactory());
-        ConfigSimulador configSimulador = mapper.readValue(new File("configSimulador.yaml"), ConfigSimulador.class);
-
-        //TODO setar campos em suas respectivas classes que serão usadas na simulação
+        return mapper.readValue(new File("configSimulador.yml"), ConfigSimulador.class);
     }
 }

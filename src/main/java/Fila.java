@@ -26,27 +26,15 @@ public class Fila {
         this.idFila = idFila;
         this.servidores = servidores;
         this.capacidade = capacidade;
-        this.tempoChegadaMin= tempoChegadaMin;
-        this.tempoChegadaMax= tempoChegadaMax;
-        this.tempoAtendimentoMin = tempoAtendimentoMin;
-        this.tempoAtendimentoMax = tempoAtendimentoMax;
         acumulador = new double[this.capacidade + 1];
-        perdas = 0;
-    }
-
-    // fila com capacidade infinita
-    public Fila(int servidores, int idFila, double tempoChegadaMin, double tempoChegadaMax,
-        double tempoAtendimentoMin, double tempoAtendimentoMax) {
-        elementos = new ArrayList<>();
-        this.idFila = idFila;
-        this.servidores = servidores;
+        if (capacidade==-1) {
+            acumulador = new double[100];
+        }
         this.tempoChegadaMin= tempoChegadaMin;
         this.tempoChegadaMax= tempoChegadaMax;
         this.tempoAtendimentoMin = tempoAtendimentoMin;
         this.tempoAtendimentoMax = tempoAtendimentoMax;
-        capacidade = -1;
-        // TODO - implementar um método para aumentar capacidade desse array caso a fila tenha capacidade infinita.
-        acumulador = new double[100];
+
         perdas = 0;
     }
 
@@ -59,6 +47,9 @@ public class Fila {
         this.tempoAtendimentoMin = tempoAtendimentoMin;
         this.tempoAtendimentoMax = tempoAtendimentoMax;
         acumulador = new double[this.capacidade + 1];
+        if (capacidade==-1) {
+            acumulador = new double[100];
+        }
         perdas = 0;
     }
 

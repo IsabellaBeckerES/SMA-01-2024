@@ -5,6 +5,8 @@ public class ConfigSimulador {
     private int semente;
     private double chegada;
 
+    private int idFilaChegada;
+
     private List<ConfigFila> filas;
 
     private List<ConexaoEntreFilas> conexoes;
@@ -27,6 +29,10 @@ public class ConfigSimulador {
 
     public double getChegada() {
         return chegada;
+    }
+
+    public int getIdFilaChegada() {
+        return idFilaChegada;
     }
 
     public void setChegada(double chegada) {

@@ -7,21 +7,15 @@ public class ConfigFila {
     private double tempoAtendimentoMin;
     private double tempoAtendimentoMax;
 
+    private double probabilidadeSaida;
+
     // Atributos que não irão variar após a inicialização
     public int getServidores() {
         return servidores;
     }
 
-    public void setServidores(int servidores) {
-        this.servidores = servidores;
-    }
-
     public int getCapacidade() {
         return capacidade;
-    }
-
-    public void setCapacidade(int capacidade) {
-        this.capacidade = capacidade;
     }
     
     public int getIdFila() {
@@ -44,4 +38,7 @@ public class ConfigFila {
         return tempoChegadaMax;
     }
 
+    public double getProbabilidadeSaida() {
+        return probabilidadeSaida;
+    }
 }

@@ -13,23 +13,30 @@ public class SimuladorFilas {
     private ArrayList<ConexaoEntreFilas> conexoes = new ArrayList<>();
     private Queue<Double> listNumPseudoaleatorios = new LinkedList<>();
 
-    private double tempoPrimeiroEvento = 2;
-    private int count = 10000; // quantidade de num pseudoaleatorios
+    private double tempoPrimeiroEvento;
+    private int count; // quantidade de num pseudoaleatorios
 
-    public void iniciaSimulacao() {
+    public void iniciaSimulacao(ConfigSimulador configSimulador) {
+        tempoPrimeiroEvento = configSimulador.getChegada();
+        // seta quantidade de num peseudoaleatorios que serão usados
+        count = configSimulador.getQtdNumPseudoAleatorios();
+        // cria lista de num peseudoaleatorios
+        geradorNumPseudoaleatorio.semente = configSimulador.getSemente();
         while (count > 0) {
             listNumPseudoaleatorios.add(geradorNumPseudoaleatorio.gerarNumPseudoaleatorio());
             count--;
         }
-        
-        iniciaFilas();
 
-        Evento primeiro = new Evento(tempoPrimeiroEvento, TipoEvento.CHEGADA, 0);
+        iniciaFilas(configSimulador);
+
+        // cria primeiro evento e adiciona no escalonador
+        Evento primeiro = new Evento(tempoPrimeiroEvento, TipoEvento.CHEGADA, configSimulador.getIdFilaChegada());
         escalonador.add(primeiro);
-        
+
         int countSimulacao = 0;
 
         //try {
+        //simulação ocorre até finalizar os numeros pseudoaleatorios
             while (listNumPseudoaleatorios.size() > 0) {
                 System.out.println("\nContador: " + countSimulacao);
                 System.out.println(escalonador.toString());
@@ -65,10 +72,6 @@ public class SimuladorFilas {
         System.out.println("Escalonador: ");
         System.out.println(escalonador.toString());
 
-        for(var fila: filas){
-            System.out.println("Fila: " + fila.getIdFila());
-            System.out.println();
-        }
         System.out.println();
 
         System.out.println("******************************************");
@@ -76,36 +79,26 @@ public class SimuladorFilas {
         imprimirEstatisticasDeCadaFila();
     }
 
-    private void iniciaFilas() {
-        // TODO - capacidade infinita
-        Fila fila1 = new Fila(1, filas.size(), 2, 4, 1, 2);
-        filas.add(fila1);
+    private void iniciaFilas(ConfigSimulador configSimulador) {
 
-        Fila fila2 = new Fila(2, 5, filas.size(), 4, 8);
-        fila2.setProbabilidadeSaida(0.2);
-        filas.add(fila2);
+        for (ConfigFila novaFila : configSimulador.getFilas()) {
+            Fila fila;
 
-        Fila fila3 = new Fila(2, 10, filas.size(), 5, 15);
-        fila3.setProbabilidadeSaida(0.3);
-        filas.add(fila3);        
+            if (novaFila.getTempoChegadaMin() == -1 || novaFila.getTempoChegadaMax() == -1  ){
+                fila = new Fila(novaFila.getServidores(), novaFila.getCapacidade(), novaFila.getIdFila(), novaFila.getTempoAtendimentoMin(), novaFila.getTempoAtendimentoMax());
+            } else {
+                fila = new Fila(novaFila.getServidores(), novaFila.getCapacidade(), novaFila.getIdFila(), novaFila.getTempoChegadaMin(), novaFila.getTempoChegadaMax(), novaFila.getTempoAtendimentoMin(), novaFila.getTempoAtendimentoMax());
+            }
+            // se houver probabilidade de saida seta o campo
+            if (novaFila.getProbabilidadeSaida() != -1) {
+                fila.setProbabilidadeSaida(novaFila.getProbabilidadeSaida());
+            }
+            filas.add(fila);
+        }
 
-        ConexaoEntreFilas conexao12 = new ConexaoEntreFilas(fila1.getIdFila(), fila2.getIdFila(), 0.8);
-        conexoes.add(conexao12);
-        ConexaoEntreFilas conexao13 = new ConexaoEntreFilas(fila1.getIdFila(), fila3.getIdFila(), 0.2);
-        conexoes.add(conexao13);        
-        ConexaoEntreFilas conexao21 = new ConexaoEntreFilas(fila2.getIdFila(), fila1.getIdFila(), 0.3);
-        conexoes.add(conexao21);
-        ConexaoEntreFilas conexao23 = new ConexaoEntreFilas(fila2.getIdFila(), fila3.getIdFila(), 0.5);
-        conexoes.add(conexao23);
-        ConexaoEntreFilas conexao32 = new ConexaoEntreFilas(fila3.getIdFila(), fila2.getIdFila(), 0.7);
-        conexoes.add(conexao32);
-
-        // conexoes de saida
-        // -1 indica saida
-        ConexaoEntreFilas conexaoSaida2 = new ConexaoEntreFilas(fila2.getIdFila(), -1, 0.2);
-        conexoes.add(conexaoSaida2);
-        ConexaoEntreFilas conexaoSaida3 = new ConexaoEntreFilas(fila3.getIdFila(), -1, 0.3);
-        conexoes.add(conexaoSaida3);
+        for (ConexaoEntreFilas novaConexao : configSimulador.getConexoes()) {
+            conexoes.add(novaConexao);
+        }
     }
 
     public void chegada(Evento ev) {

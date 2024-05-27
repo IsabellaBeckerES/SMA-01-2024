@@ -298,6 +298,7 @@ public class SimuladorFilas {
             System.out.println("\t- " + "Vazão: " + fila.vazaoPorHora(tempoGlobal) + " clientes por hora");
             System.out.println("\t- " + "Utilização: " + (fila.utilizacao(tempoGlobal) * 100) + "%");
             System.out.println("\t- " + "Tempo de resposta: " + fila.tempoDeRespostaEmHoras(tempoGlobal) + " hora(s)");
+            System.out.println("\t- " + "Perdas: " + fila.getPerdas());
         }
     }
 

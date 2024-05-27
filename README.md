@@ -16,7 +16,7 @@
 - tempoChegadaMax: tempo máximo que pode ocorrer uma chegada na fila.
 - tempoAtendimentoMin: tempo minimo de atendimento do servidor da fila.
 - tempoAtendimentoMax: tempo máximo de atendimento do servidor da fila.
-- probabilidadeSaida: probabiliadde de ocorrer uma saida da fila (caso a fila só ocorra passagens para outras filas esse campo dece ser preenchido com -1)
+- probabilidadeSaida: probabiliadde de ocorrer uma saida da fila (caso a fila só ocorra passagens para outras filas esse campo deve ser preenchido com -1)
 
 **conexoes:**
 - idOrigem: id da fial de origem.

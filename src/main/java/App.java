@@ -1,6 +1,5 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
 
@@ -22,6 +21,6 @@ public class App {
 
     public static ConfigSimulador lerArquivoYaml() throws IOException {
         var mapper = new ObjectMapper(new YAMLFactory());
-        return mapper.readValue(new File("SMA-01-2024-GT10\\configSimulador.yml"), ConfigSimulador.class);
+        return mapper.readValue(new File("configSimulador.yml"), ConfigSimulador.class);
     }
 }
